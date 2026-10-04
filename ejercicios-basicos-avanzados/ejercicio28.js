@@ -14,8 +14,6 @@ const albums = [
 ];
 
 let totalDuration = 0;
-let minutosTotales = 0;
-let segundosTotales = 0;
 
 for (const album of albums) {
   if (album.genre === "Rock") {
@@ -26,3 +24,32 @@ for (const album of albums) {
 console.log("La duración de tus discos de rock sumada es: " + totalDuration);
 
 // TODO: Revisar la conversión de los segundos.
+
+// Edit 04/10/2026 Iba a enviarlo y dando un repaso rápido me encuentro este todo...
+
+// No se si me estoy complicando la vida y hay cosas mas sencillas pero he metido todo en una función... Filtro el genero y en el reduce acumulo en un objeto los minutos (sumando la duración truncada) y los segundos como un entero. Luego recordando un ejercicio de Java que puso borja separo el total de segundo en la parte correspondiente a los minutos y el modulo para los segundos.
+
+function calcularDuracionGenero(listaDiscos, genero) {
+  const duracionTotal = listaDiscos
+    .filter((album) => album.genre === genero)
+    .reduce(
+      (acc, album) => {
+        acc.minutos += Math.trunc(album.duration);
+
+        acc.segundos += Math.round(
+          (album.duration - Math.trunc(album.duration)) * 100,
+        );
+        return acc;
+      },
+      { minutos: 0, segundos: 0 },
+    );
+
+  let minutosObtenidos = Math.trunc(duracionTotal.segundos / 60);
+  let segundosRestantes = (duracionTotal.segundos % 60) / 100;
+
+  return duracionTotal.minutos + minutosObtenidos + segundosRestantes;
+}
+
+console.log(
+  `La duración de tus discos de rock sumada en condiciones es de ${calcularDuracionGenero(albums, "Rock")}`,
+);
